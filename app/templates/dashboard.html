@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-bg-primary">
+            <div class="card-body text-center">
+                <i class="bi bi-building display-3"></i>
+                <h3>{{ stats.schools }}</h3>
+                <p class="mb-0">Escolas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-success">
+            <div class="card-body text-center">
+                <i class="bi bi-people display-3"></i>
+                <h3>{{ stats.classes }}</h3>
+                <p class="mb-0">Turmas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-warning">
+            <div class="card-body text-center">
+                <i class="bi bi-person-video3 display-3"></i>
+                <h3>{{ stats.teachers }}</h3>
+                <p class="mb-0">Professores</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-info">
+            <div class="card-body text-center">
+                <i class="bi bi-journal-check display-3"></i>
+                <h3>{{ stats.assignments }}</h3>
+                <p class="mb-0">Atribuições</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="bi bi-clock-history"></i> Últimas Atribuições</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Professor</th>
+                                <th>Disciplina</th>
+                                <th>Turma</th>
+                                <th>Período</th>
+                                <th>Ano</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in recent_assignments %}
+                            <tr>
+                                <td>{{ a.teacher.name }}</td>
+                                <td>{{ a.subject.name }}</td>
+                                <td>{{ a.class_group.name }} ({{ a.class_group.school.name }})</td>
+                                <td>{{ {'manha':'Manhã','tarde':'Tarde','noite':'Noite'}.get(a.period or a.class_group.period, a.period or a.class_group.period) }}</td>
+                                <td>{{ a.year }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Nenhuma atribuição registrada</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="bi bi-lightning"></i> Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('schools.new_school') }}" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> Nova Escola</a>
+                    <a href="{{ url_for('classes.new_class') }}" class="btn btn-outline-success"><i class="bi bi-plus-circle"></i> Nova Turma</a>
+                    <a href="{{ url_for('teachers.new_teacher') }}" class="btn btn-outline-warning"><i class="bi bi-plus-circle"></i> Novo Professor</a>
+                    <a href="{{ url_for('assignments.new_assignment') }}" class="btn btn-outline-info"><i class="bi bi-plus-circle"></i> Nova Atribuição</a>
+                    <a href="{{ url_for('assignments.auto_assign') }}" class="btn btn-outline-secondary"><i class="bi bi-magic"></i> Atribuição Automática</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="bi bi-pie-chart"></i> Resumo</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Disciplinas:</strong> {{ stats.subjects }}</p>
+                <p><strong>Usuários:</strong> {{ stats.users }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

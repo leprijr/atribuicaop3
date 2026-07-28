@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="bi bi-book"></i> Disciplinas de {{ teacher.name }}</h2>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-3">
+            <div class="card-header"><h5 class="mb-0">Vincular Disciplina</h5></div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.subject_id.label(class='form-label') }}
+                        {{ form.subject_id(class='form-select' + (' is-invalid' if form.subject_id.errors else '')) }}
+                        {% for error in form.subject_id.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.classification.label(class='form-label') }}
+                        {{ form.classification(class='form-control' + (' is-invalid' if form.classification.errors else ''), placeholder='0 a 100') }}
+                        {% for error in form.classification.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-link"></i> Vincular</button>
+                    <a href="{{ url_for('teachers.list_teachers') }}" class="btn btn-secondary">Voltar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Disciplinas Vinculadas</h5></div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Disciplina</th>
+                            <th>Classificação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ts in subjects %}
+                        <tr>
+                            <td>{{ ts.subject.name }}</td>
+                            <td><span class="badge bg-{{ 'success' if ts.classification >= 70 else 'warning' if ts.classification >= 40 else 'danger' }}">{{ ts.classification }}</span></td>
+                            <td>
+                                <a href="{{ url_for('teachers.remove_subject', id=ts.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Remover disciplina?')"><i class="bi bi-unlink"></i></a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">Nenhuma disciplina vinculada</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

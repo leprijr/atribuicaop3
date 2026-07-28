@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="bi bi-gear"></i> Configurações</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header"><h5 class="mb-0">Identidade Visual</h5></div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.app_name.label(class='form-label') }}
+                        {{ form.app_name(class='form-control' + (' is-invalid' if form.app_name.errors else '')) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.logo.label(class='form-label') }}
+                        {% if settings.get('logo_exists') %}
+                        <div class="mb-2">
+                            <img src="{{ url_for('static', filename='uploads/logo/logo.' + settings.get('logo_ext', 'png')) }}" alt="Logo atual" height="50">
+                            <small class="text-muted"> (atual)</small>
+                        </div>
+                        {% endif %}
+                        {{ form.logo(class='form-control' + (' is-invalid' if form.logo.errors else '')) }}
+                        {% for error in form.logo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.favicon.label(class='form-label') }}
+                        {% if settings.get('favicon_exists') %}
+                        <div class="mb-2">
+                            <small class="text-muted">Favicon atual</small>
+                        </div>
+                        {% endif %}
+                        {{ form.favicon(class='form-control' + (' is-invalid' if form.favicon.errors else '')) }}
+                        {% for error in form.favicon.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                    </div>
+                    <hr>
+                    <h5>Configurações de E-mail</h5>
+                    <div class="mb-3">
+                        {{ form.mail_server.label(class='form-label') }}
+                        {{ form.mail_server(class='form-control') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.mail_port.label(class='form-label') }}
+                        {{ form.mail_port(class='form-control') }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.mail_use_tls(class='form-check-input') }}
+                        {{ form.mail_use_tls.label(class='form-check-label') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.mail_username.label(class='form-label') }}
+                        {{ form.mail_username(class='form-control') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.mail_password.label(class='form-label') }}
+                        {{ form.mail_password(class='form-control') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.mail_default_sender.label(class='form-label') }}
+                        {{ form.mail_default_sender(class='form-control') }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save"></i> Salvar Configurações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Informações do Sistema</h5></div>
+            <div class="card-body">
+                <p><strong>Versão:</strong> 1.0.0</p>
+                <p><strong>Repositório:</strong> <a href="https://github.com/leprijr/atribuicaop3" target="_blank">github.com/leprijr/atribuicaop3</a></p>
+                <hr>
+                <h5>Uploads</h5>
+                <p><strong>Logo:</strong> 
+                    {% if settings.get('logo_exists') %}
+                    <span class="text-success">Disponível</span>
+                    {% else %}
+                    <span class="text-muted">Não enviado</span>
+                    {% endif %}
+                </p>
+                <p><strong>Favicon:</strong> 
+                    {% if settings.get('favicon_exists') %}
+                    <span class="text-success">Disponível</span>
+                    {% else %}
+                    <span class="text-muted">Não enviado</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

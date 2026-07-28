@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: atribuicaop3
+    runtime: python
+    repo: https://github.com/leprijr/atribuicaop3
+    plan: free
+    region: ohio
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+    disk:
+      name: uploads
+      mountPath: /opt/render/project/src/app/static/uploads
+      sizeGB: 1
